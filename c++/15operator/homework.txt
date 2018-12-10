@@ -1,0 +1,15 @@
+1.  完善MyString加入运算符重载，
+  operator=
+  operator+
+  operator[](int nIndex)
+  operator==
+  operator!=
+  operator>
+  operator<
+
+2. 写一个有重载operator++的类。。试着用前缀和后缀的形势重载，看看编译器会给出什么警告。
+3.创建含有一个int成员的简单的类，以成员函数的形式重载operator+。同时提供一个print成员函数，以ostream&作为参数并打印出该ostream&。测试该类表面它可以正确运行。
+4. 以成员函数的形式，在第三题的类中增加一个二元operator-。要求可以在a+b-c这样复杂的表达式中使用该类的对象。
+5.在第三题的例子中增加operator++和operator--，要包括前缀和后缀版本，使得它们返回自增和自减对象。确保后缀版本返回正确的值。
+6.改变第三题中的print()函数，使得它是重载operator<<。
+7.实现CStudent智能指针。
