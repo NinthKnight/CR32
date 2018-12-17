@@ -1,0 +1,4 @@
+1. 右值引用
+2. 4种cast
+3. lambda表达式
+4. function&&bind的使用
