@@ -36,6 +36,111 @@ using namespace std;
 
 HICON g_AppleIcon = nullptr;
 
+//DC
+//BeginPaint/EndPaint, 在WM_PAINT消息中使用
+//GetDC GetDesktopDC GetWindowDC... / ReleaseDC
+//CreateCompatibleDC CreateDC / DeleteDC
+
+int OnPaint(HWND hwnd,      // handle to window
+    UINT uMsg,      // message identifier
+    WPARAM wParam,  // first message parameter
+    LPARAM lParam) {
+
+    //截屏
+    //获取屏幕的数据，并放入到内存DC中
+
+    //从桌面的窗口DC中的数据放入到内存DC中
+
+    //1. 首先获取桌面的窗口HWND
+    HWND hDskWnd = GetDesktopWindow();
+
+    //2. 获取桌面的窗口DC
+    HDC hDskDC = GetDC(hDskWnd);
+
+    //3. 创建一个内存DC（兼容DC），初始的bitmap是1*1
+    //HDC hMemDC = CreateCompatibleDC(hDskDC);
+
+    //// 位图 bitmap, jpg, png, gif, bmp
+    ////4. 创建一个与内存DC相兼容的bitmap对象
+
+    ////获取系统的屏幕宽高
+    int nWidth = GetSystemMetrics(SM_CXSCREEN);
+    int nHeight = GetSystemMetrics(SM_CYSCREEN);
+
+    //HBITMAP hBitmap = CreateCompatibleBitmap(hDskDC,
+    //                                        nWidth,
+    //                                        nHeight);
+
+    ////5. 设置内存DC的bitmap
+    //SelectObject(hMemDC, hBitmap);
+
+
+    ////6. 从桌面DC的Bitmap中的数据拷贝给内存DC中
+    //BOOL bRet = BitBlt(hMemDC, 0, 0, nWidth, nHeight, hDskDC, 0, 0, SRCCOPY);
+    //if (!bRet) {
+    //    return 0;
+    //}
+
+    //int nBitSize = 4 * nWidth * nHeight;
+    //char* pBuf = new char[nBitSize];
+    //memset(pBuf, 0, nBitSize);
+
+    //GetBitmapBits(hBitmap, nBitSize, pBuf);
+
+    //if (pBuf != nullptr) {
+    //    delete[] pBuf;
+    //    pBuf = nullptr;
+    //}
+
+    //从内存DC中拿出数据，放入到窗口中
+    //拿客户区的DC
+    PAINTSTRUCT ps;
+
+    HDC hCurDC = BeginPaint(hwnd, &ps);
+    if (hCurDC == nullptr) {
+        return 0;
+    }
+
+    BOOL bRet = BitBlt(hCurDC, 0, 0, nWidth, nHeight, hDskDC, 0, 0, SRCCOPY);
+    if (!bRet) {
+        return 0;
+    }
+
+
+    EndPaint(hwnd, &ps);
+
+    ReleaseDC(hDskWnd, hDskDC);
+
+
+
+    //PAINTSTRUCT ps;
+
+    //HDC hDC = BeginPaint(hwnd, &ps);
+    //if (hDC == nullptr) {
+    //    break;
+    //}
+    ////创建一个画刷
+    //HBRUSH hbrush, hbrushOld;
+    //hbrush = CreateSolidBrush(RGB(255, 0, 0));
+    //hbrushOld = (HBRUSH)SelectObject(hDC, hbrush);
+    //Rectangle(hDC, 100, 100, 200, 200);
+
+
+    //SelectObject(hDC, hbrushOld);
+    //DeleteObject(hbrush);
+
+    ////创建一个画笔
+    ////CreatePen();
+    ////画直线
+    ////LineTo
+
+
+    //DrawIcon(hDC, 0, 0, g_AppleIcon);
+
+    //EndPaint(hwnd, &ps);
+
+    return 1;
+}
 
 //窗口回调函数
 LRESULT CALLBACK MyWindowProc(HWND hwnd,      // handle to window
@@ -52,7 +157,7 @@ LRESULT CALLBACK MyWindowProc(HWND hwnd,      // handle to window
         LPCREATESTRUCT lpCs = (LPCREATESTRUCT)lParam;
         
 
-        g_AppleIcon = LoadIcon(nullptr,
+        g_AppleIcon = LoadIcon(lpCs->hInstance,
             MAKEINTRESOURCE(IDI_APPLE));
 
 
@@ -67,43 +172,20 @@ LRESULT CALLBACK MyWindowProc(HWND hwnd,      // handle to window
     
         OutputDebugStringA("WM_TIMER");
 
+        InvalidateRect(hwnd, NULL, false);
+        UpdateWindow(hwnd);
+
     }
     break;
 
 
     case WM_PAINT: {
         OutputDebugStringA("WM_PAINT");
-        PAINTSTRUCT ps;
 
-        HDC hDC = BeginPaint(hwnd, &ps);
-        if (hDC == nullptr) {
-            break;
-        }
-        //创建一个画刷
-        HBRUSH hbrush, hbrushOld;
-        hbrush = CreateSolidBrush(RGB(255, 0, 0));
-        hbrushOld = (HBRUSH)SelectObject(hDC, hbrush);
-        Rectangle(hDC, 100, 100, 200, 200);
-
-
-        SelectObject(hDC, hbrushOld);
-        DeleteObject(hbrush);
-
-        //创建一个画笔
-        //CreatePen();
-        //画直线
-        //LineTo
-
-
-        DrawIcon(hDC, 0, 0, g_AppleIcon);
-
-        EndPaint(hwnd, &ps);
-
-
-
-        
+        ValidateRect(hwnd, NULL);
+        //OnPaint(hwnd, uMsg, wParam, lParam);
     }
-                  break;
+    break;
 
     case WM_CHAR: {
         TCHAR ch = wParam;
@@ -189,6 +271,29 @@ int WINAPI WinMain(HINSTANCE hInstance,
     LPSTR lpCmdLine,
     int nShow) {
 
+    //获取任意窗口的窗口句柄
+
+    HWND hCalcWnd =  FindWindow(_T("Notepad"), NULL);
+
+
+
+
+    //在桌面上绘制
+    HWND hDskWnd = GetDesktopWindow();
+
+    HDC hDC = GetWindowDC(hCalcWnd);
+
+    RECT rc;
+    rc.top = 200;
+    rc.left = 0;
+    rc.right = 100;
+    rc.bottom = 400;
+
+    DrawText(hDC, _T("Hello WOrld!"), -1, &rc, DT_LEFT);
+
+
+    ReleaseDC(hCalcWnd, hDC);
+
 
     //窗口类的结构体
     WNDCLASSEX wcs = {0};
@@ -214,8 +319,8 @@ int WINAPI WinMain(HINSTANCE hInstance,
     HWND hWnd = CreateWindowA("CR32_WinCls",
         "CR32",
         WS_OVERLAPPEDWINDOW,
-        0,
-        0,
+        500,
+        500,
         800,
         600,
         NULL,
