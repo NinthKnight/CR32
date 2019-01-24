@@ -1,0 +1,7 @@
+<RCC>
+    <qresource prefix="/new/img">
+        <file>res/line.bmp</file>
+        <file>res/ellc.bmp</file>
+        <file>res/rect.bmp</file>
+    </qresource>
+</RCC>
