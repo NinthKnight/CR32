@@ -5,12 +5,10 @@
 class Eclipse : public IShape
 {
 public:
-    Eclipse(QPoint &ptBegin, QPoint &ptEnd);
+    Eclipse();
 
     bool Draw(QPainter& painter);
-
-    QPoint m_ptBegin;
-    QPoint m_ptEnd;
+    virtual bool IsSelect(QPoint& pos);
 };
 
 #endif // ECLIPSE_H
