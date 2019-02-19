@@ -1,0 +1,16 @@
+0x00406D6C   4   nplanX,  当前飞机位置
+0x00406D70   4   nplanY,
+0x00406E10   4   子弹数组首地址
+0x00406DA8   4   当前子弹的个数
+0x00406D80   4   死亡标志
+0x004020F5   1   速度
+0x00403616   0xeb  __asm jmp    无敌模式
+             0x74  __asm je     普通模式
+0x0040469E   4    初始子弹个数
+
+      nBulletX >>= 6;
+      nBulletX -= 4;
+      nBulletY >>= 6;
+      nBulletY -= 4;
+
++=0xF
