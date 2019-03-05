@@ -127,7 +127,6 @@ bool InjectDll() {
 
     //写进程的内存数据
     DWORD writedBytes = 0;
-    DWORD dwLength = sizeof(data);
     BOOL bRet = WriteProcessMemory(hTarget,
         lpAddr,
         pszBuf,
