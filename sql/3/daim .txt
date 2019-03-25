@@ -1,0 +1,59 @@
+-- 查询
+SELECT stu_id FROM tb_student;
+
+SELECT stu_id, stu_name FROM tb_student;
+
+SELECT * FROM tb_student;
+
+-- 别名
+SELECT stu_id AS '学号', stu_name AS '姓名' FROM tb_student;
+
+-- 查询张姓同学
+SELECT * FROM tb_student WHERE stu_name LIKE '张__';
+
+-- 集合查询
+SELECT * FROM tb_course WHERE course_name = '语文' OR course_name = '数学';
+
+SELECT * FROM tb_course WHERE course_name NOT IN ('语文' ,'数学');
+
+SELECT * FROM tb_score WHERE score = NULL
+
+SELECT * FROM tb_score WHERE score IS NOT NULL
+
+-- 找出 语文成绩 > 80 且  < 100
+SELECT * FROM tb_score WHERE score > 80 AND score < 100 AND course_id = 1;
+
+SELECT * FROM tb_score WHERE score BETWEEN 80 AND 100 AND course_id = 1;
+
+
+SELECT count(*) FROM tb_score WHERE score BETWEEN 80 AND 100 AND course_id = 1;
+
+SELECT * FROM tb_score 
+         WHERE course_id = 1
+				 ORDER BY score DESC
+				 LIMIT 10 OFFSET 10;
+				 
+SELECT stu_id, course_id, max(score) FROM tb_score
+				 GROUP BY stu_id, course_id;
+
+SELECT * FROM tb_score
+				 GROUP BY stu_id;
+
+SELECT count(*) FROM tb_score
+				 GROUP BY stu_id;
+
+SELECT * FROM tb_score WHERE stu_id = 721003
+
+SELECT stu_id,  max(score) FROM tb_score
+				 GROUP BY stu_id
+				 HAVING max(score) > 80;
+				 
+SELECT stu_id, max(score) FROM tb_score
+				 GROUP BY stu_id;
+
+
+SELECT * FROM tb_score WHERE stu_id IN(
+SELECT stu_id FROM (SELECT stu_id, max(score) AS max_score FROM tb_score GROUP BY stu_id)max_tb_score WHERE tb_score.score = max_tb_score.max_score);
+
+
+

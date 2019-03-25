@@ -1,0 +1,58 @@
+统计函数；
+    avg(distinct  字段名)   求平均值
+    count(distinct  字段名) 统计字段值的个数， 
+                            空值不统计
+    count(*)                统计查询返回的行数
+    max(字段名)             求字段中的最大值
+    min(字段名)             求字段中的最小值
+    sum(distinct 字段名)    求和字段值
+    注：distinct 限制重复值
+
+字符串函数；
+    ASCII(字符串)                           返回首字母的ASCII码
+    Char(数值表达式)                        返回对应数值ASCII码的字符
+    Charindex(字符串1,字符串2)              返回串1在第串2中的位置
+    Left(字符串，长度n)                     返回所给字符串的左边n个字符
+    Len(字符串)                             返回字符串的长度
+    Lower(字符串)                           返回给定字符串的小写形式
+    LTrim(字符串)                           抹去前导空格
+    PatIndex(模式,字符串)                   返回给定模式在字符串中的位置
+    Reverse(字符串)                         返回字符串的反置
+    Right(字符串,长度n)                     返回字符串的右边n个字符
+    RTrim(字符串)                           抹去字符串的尾部空格
+    Space(长度n)                            产生n个空格
+    Str(数值表达式,长度,精度)               把数值变成字符串
+    Stuff(字符串1,开始位置,长度,字符串2)    把字符串1里的指定位置的字符置换
+    Substring(字符串1,开始位置,长度)        返回指定位置的字串
+    Upper(字符串)                           返回字符串的大写形式
+
+日期函数；
+    DateAdd(日期元素,数值n,日期)            给指定日期加n个日期元素
+    DateDiff(日期元素,日期1,日期2)          求两个日期的日期元素之差
+    DateName(日期元素,日期)                 以字符形式返回日期元素
+    DatePart(日期元素,日期)                 以整数形式返回日期元素
+    GetDate()                               返回当前日期
+
+数学函数；
+    ABS(数值表达式)                         返回绝对值
+    Power(数值表达式,n)                     求n次方
+    Rand()                                  返回一个0到1之间的随机数
+    Round(数值表达式,n)                     把一个数四舍五入到指定位数
+    Sqrt(数值表达式)                        求平方根
+
+系统函数；
+    Host_ID()                               返回客户进程 主机ID
+    Host_name()                             返回进程主机名
+    SUSER_SID(‘login_name’)               以字符形式返回日期元素
+    SUSER_SName(user_id)                    以整数形式返回日期元素
+    DB_ID(‘db_name’)                      返回数据库ID
+    DB_Name(db_id)                          返回数据库名
+    Object_id(‘objname’)                  返回数据对象ID
+    Ojbect_Name(obj_id)                     返回数据对象名
+
+其它函数；
+    IsDate(表达式)                          测试表达式是否是日期
+    IsNull(表达式1,表达式2)                 测试表达式1的值是否为NULL，是则返回表达式2的值，
+                                                                       否则返回表达式1的值
+    IsNumeric(表达式)                       测试表达式是否的数值
+    Convert(数据类型，表达式,风格)          类型转换函数

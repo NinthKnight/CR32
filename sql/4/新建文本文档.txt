@@ -1,0 +1,146 @@
+SELECT * FROM tb_score WHERE stu_id IN(
+SELECT stu_id FROM (SELECT stu_id, max(score) AS max_score FROM tb_score GROUP BY stu_id)max_tb_score WHERE tb_score.score = max_tb_score.max_score);
+
+SELECT stu_id, sum(score) AS total_score FROM tb_score
+				 GROUP BY stu_id
+				 HAVING total_score > 300
+				 ORDER BY total_score DESC
+				 
+				 
+SELECT * FROM tb_student 
+         WHERE stu_id = 721017
+				 
+-- 查询班级中最高分同学的名字
+
+-- 标量 单值（表示某一个字段中的值） --- =，>, < ...
+-- 集合 多个单值的集合（单值，单值....） IN/NOT IN
+-- 表 （二维的，有多个字段和记录）
+SELECT stu_id FROM tb_score
+				 GROUP BY stu_id
+				 HAVING sum(score) > 300
+				 ORDER BY sum(score) DESC
+				 LIMIT 1
+				 
+-- 子查询
+-- 1）独立子查询：
+--     子查询可以独立完成，不依赖外层查询
+--      逻辑顺序： 先执行子查询，再根据返回的结果，执行外部的查询
+
+-- 2) 关联子查询：
+--     子查询依赖外层查询
+--      逻辑顺序： 先从外部查询中取出一行，然后代入到内部查询中，然后返回对应符合条件的结果
+
+
+-- 子查询返回的是一个标量：
+-- =、>、<...等用于标量的连接
+SELECT * FROM tb_student 
+         WHERE stu_id = 
+				 (SELECT stu_id FROM tb_score
+				 GROUP BY stu_id
+				 HAVING sum(score) > 300
+				 ORDER BY sum(score) DESC
+				 LIMIT 1)
+ 
+-- 查询班级中总分>300分的同学名字
+-- 
+SELECT * FROM tb_student 
+         WHERE stu_id IN 
+				 (SELECT stu_id FROM tb_score
+				 GROUP BY stu_id
+				 HAVING sum(score) > 300
+				 ORDER BY sum(score) DESC
+				 )
+				 
+-- 查询班级中最高分前三的同学名字
+SELECT stu_id, stu_name FROM tb_student 
+         WHERE stu_id IN 
+				 (SELECT stu_id, sum(score) AS total_score FROM tb_score
+				 GROUP BY stu_id
+				 HAVING sum(score) > 300
+				 ORDER BY sum(score) DESC
+				 )
+				 
+SELECT stu_id, (SELECT stu_name FROM tb_student WHERE tb_student.stu_id = sumscore_table.stu_id) AS  '姓名',total_score FROM 				 (SELECT stu_id, sum(score) AS total_score FROM tb_score
+				 GROUP BY stu_id
+				 HAVING sum(score) > 300
+				 ORDER BY sum(score) DESC
+				 ) AS sumscore_table 
+				 LIMIT 3
+				
+-- 子查询可以出现的位置：-- 查询字段名
+-- 关联子查询：
+SELECT DISTINCT course_id, (SELECT course_name FROM tb_course WHERE course_id = tb_score.course_id) FROM tb_score
+
+-- 表（FROM后）
+SELECT tmp.stu_id FROM (SELECT * FROM tb_student) AS tmp;
+
+-- 条件
+SELECT * FROM tb_student
+         WHERE stu_id IN (
+					SELECT stu_id FROM tb_student
+				  WHERE stu_name LIKE '张%'
+				 )
+
+-- 查询选了课程的学生姓名
+SELECT * FROM tb_student WHERE stu_id IN (
+SELECT DISTINCT stu_id FROM tb_score);
+
+-- 查询选了语文课程的学生姓名
+SELECT * FROM tb_student WHERE stu_id IN (
+SELECT DISTINCT stu_id FROM tb_score WHERE course_id = (SELECT course_id FROM tb_course WHERE course_name = '语文'));
+
+-- 查询单科成绩最高的学生
+SELECT * FROM tb_student WHERE stu_id IN(
+SELECT stu_id FROM tb_score WHERE 
+SELECT course_id, MAX(score) FROM tb_score 
+			   GROUP BY course_id);
+				 
+	 
+SELECT * FROM tb_score AS tb_tmp
+          WHERE EXISTS (
+					
+					SELECT * FROM 
+					(SELECT course_id, MAX(score) AS max_score FROM tb_score 
+			   GROUP BY course_id
+				 ) AS tb_tmp2
+					WHERE tb_tmp.course_id = tb_tmp2.course_id AND
+				  tb_tmp.score = tb_tmp2.max_score
+					)
+ 
+
+
+
+
+SELECT course_id, MAX(score) FROM tb_score 
+			   GROUP BY course_id
+
+
+SELECT * FROM tb_score AS tmp WHERE (SELECT count(*) FROM tb_score WHERE tb_score.course_id = tmp.course_id AND tb_score.score >= tmp.score) <= 1
+
+SELECT * FROM tb_score WHERE course_id = 4 
+				ORDER BY score DESC
+
+-- 查询选修了课程的学生姓名
+
+SELECT count(*) FROM tb_student;
+
+SELECT count(*) FROM tb_score;
+
+-- 笛卡尔积 集合的乘法
+SELECT * FROM tb_student, tb_score
+
+-- 内连接
+SELECT * FROM tb_student INNER JOIN  tb_score
+           ON tb_student.stu_id = tb_score.stu_id;
+					 
+-- 外连接
+SELECT * FROM  tb_score RIGHT OUTER  JOIN  tb_student
+           ON tb_student.stu_id = tb_score.stu_id
+UNION
+SELECT * FROM  tb_score LEFT OUTER  JOIN  tb_student
+           ON tb_student.stu_id = tb_score.stu_id;  
+					 
+				 
+DELETE  FROM tb_score WHERE stu_id = 721001;
+				 
+				 
