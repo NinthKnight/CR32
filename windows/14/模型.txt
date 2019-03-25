@@ -1,0 +1,14 @@
+网络模型
+
+异步：PostMessage  recv
+同步：SendMessage  recv
+
+1. select
+
+2. WSAAsyncSelect 异步选择
+
+3. WSAEventSelect 事件选择
+
+------  重叠模型
+
+4. IOCP   完成端口
